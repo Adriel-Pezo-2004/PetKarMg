@@ -1,0 +1,50 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+model Client {
+  id           String        @id @default(auto()) @map("_id") @db.ObjectId
+  name         String
+  dni          String        @unique
+  phone        String?
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  appointments Appointment[]
+}
+
+model Appointment {
+  id          String     @id @default(auto()) @map("_id") @db.ObjectId
+  title       String
+  description String?
+  type        String     // Nuevo campo para tipo de cita
+  date        DateTime   // Fecha de la cita
+  time        String     // Hora de la cita (ej: "14:30")
+  address     String
+  zone        String
+  status      Status     @default(SCHEDULED)
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  clientId    String     @db.ObjectId
+  client      Client     @relation(fields: [clientId], references: [id])
+  dni         String     
+}
+
+model User {
+  id           String        @id @default(auto()) @map("_id") @db.ObjectId
+  name         String
+  password     String        @unique
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+}
+
+enum Status {
+  SCHEDULED
+  CONFIRMED
+  COMPLETED
+  CANCELLED
+}
