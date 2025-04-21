@@ -3,6 +3,10 @@
 import Link from "next/link";
 import React, { useState, useEffect } from "react";
 import * as Toast from "@radix-ui/react-toast";
+import { Badge } from "@/components/ui/badge";
+import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Separator } from "@/components/ui/separator";
 
 const ClientsPage = () => {
   const [dni, setDni] = useState("");
@@ -159,40 +163,45 @@ const ClientsPage = () => {
             </div>
           ) : clients.length > 0 ? (
             <div className="space-y-4">
-              <ul className="space-y-4">
-                {clients.map((client) => (
-                  <li
-                    key={client.id}
-                    className="p-4 sm:p-6 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors duration-200"
-                  >
-                    <h3 className="text-lg font-bold text-indigo-600">
-                      {client.name}
-                    </h3>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-3">
-                      <div>
-                        <p className="text-sm text-gray-600">
-                          DNI:{" "}
-                          <span className="text-gray-800">{client.dni}</span>
-                        </p>
-                        <p className="text-sm text-gray-600">
-                          Teléfono:{" "}
-                          <span className="text-gray-800">
-                            {client.phone || "N/A"}
-                          </span>
-                        </p>
-                      </div>
-                      <div>
-                        <p className="text-sm text-gray-600">
-                          Registrado el:{" "}
-                          <span className="text-gray-800">
+              {clients.map((client) => (
+                <Card key={client.id} className="overflow-hidden border-zinc-200">
+                  <CardContent className="p-0">
+                    <div className="p-4">
+                      <div className="flex justify-between items-start">
+                        <div className="space-y-1.5">
+                          <h3 className="font-medium text-zinc-900">
+                            {client.name}
+                          </h3>
+                          <Badge
+                            variant="secondary"
+                            className="bg-zinc-100 text-zinc-900 hover:bg-zinc-100 border-none"
+                          >
+                            Cliente
+                          </Badge>
+                        </div>
+                        <div className="text-right text-sm text-zinc-500">
+                          <p className="mt-1">DNI: {client.dni}</p>
+                          <p className="mt-1">
+                            Registrado el:{" "}
                             {new Date(client.createdAt).toLocaleDateString()}
-                          </span>
-                        </p>
+                          </p>
+                        </div>
                       </div>
                     </div>
-                  </li>
-                ))}
-              </ul>
+                    <Separator className="bg-zinc-100" />
+                    <div className="flex justify-end p-2">
+                      <Button
+                        asChild
+                        variant="ghost"
+                        size="sm"
+                        className="text-zinc-600 hover:text-zinc-900 hover:bg-zinc-100"
+                      >
+                        <Link href={`/clients/${client.id}`}>Ver detalles</Link>
+                      </Button>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
             </div>
           ) : (
             <div className="text-center py-12 text-gray-500">
